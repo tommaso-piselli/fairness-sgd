@@ -1,3 +1,6 @@
+# Fairness-sgd
+edited version of the code provided by Abu Reyan Ahmed
+
 ## Installation
 
 ### Install python3
