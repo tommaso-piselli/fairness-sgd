@@ -429,12 +429,12 @@ def unfairness(pos, D, W, node_dic=None, sampleSize=None, sample=None, reduce='m
             D = D.view(-1)
             W = W.view(-1)
             # ToDo: inserire cu cv qui
-            reds = 0
-            blues = 0
-            bookmark = itertools.combinations(range(n), 2)
-            for i, j in bookmark:
-                cu = node_dic[i]
-                cv = node_dic[j]
+            # reds = 0
+            # blues = 0
+            # bookmark = itertools.combinations(range(n), 2)
+            # for i, j in bookmark:
+            #     cu = node_dic[i]
+            #     cv = node_dic[j]
 
 
     else:
@@ -443,39 +443,22 @@ def unfairness(pos, D, W, node_dic=None, sampleSize=None, sample=None, reduce='m
         D = torch.tensor([D[i, j] for i, j in sample])
         W = torch.tensor([W[i, j] for i, j in sample])
         # ToDo: inserire cu cv qui
-        reds = 0
-        blues = 0
-        for i in range(len(sample)):
-            u = sample[i, 0]
-            v = sample[i, 1]
-            cu = node_dic[u.item()]
-            cv = node_dic[v.item()]
+        # reds = 0
+        # blues = 0
+        # for i in range(len(sample)):
+        #     u = sample[i, 0]
+        #     v = sample[i, 1]
+        #     cu = node_dic[u.item()]
+        #     cv = node_dic[v.item()]
 
     pdist = nn.PairwiseDistance()(x0, x1)
 
     res = W * (pdist - D) ** 2
-    #print(f'Stress: {res}') # tensore 1xBatch
-    #print(f'Sample: {sample}')
 
-    if cu == "red":
-        reds += res[i].item()
-    else:
-        blues += res[i].item()
-    if cv == "red":
-        reds += res[i].item()
-    else:
-        blues += res[i].item()
+    # temp = (reds / num_reds - blues / num_blues) ** 2
+    # unf = torch.tensor(temp)
+    # return unf
 
-    # A mano su 30%
-    num_reds = 14
-    num_blues = 20
-
-    temp = (reds / num_reds - blues / num_blues) ** 2
-    unf = torch.tensor(temp)
-    #print(f'Unfairness: {unf}')
-    return unf
-
-    '''
     if sample is not None:
         reds = 0
         blues = 0
@@ -496,15 +479,13 @@ def unfairness(pos, D, W, node_dic=None, sampleSize=None, sample=None, reduce='m
         num_reds = 5
         num_blues = 29
 
-        unf = torch.tensor((reds / num_reds - blues / num_blues) ** 2)
-        print(f'Unfairness: {unf}')
+        temp = (reds / num_reds - blues / num_blues) ** 2
+        unf = torch.tensor(temp)
+        #print(f'Unfairness: {unf}')
         return unf
-    
-    else:
-        cu = node_dic
 
     if reduce == 'sum':
         return res.sum()
     elif reduce == 'mean':
         return res.mean()
-    '''
+    

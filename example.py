@@ -53,6 +53,8 @@ np.random.seed(seed)
 torch.manual_seed(seed)
 max_iter = int(1e4)
 
+
+## Datasets
 # Karate Club
 graph_name = 'karate_club_graph'
 G = nx.karate_club_graph()
@@ -65,11 +67,12 @@ G = nx.karate_club_graph()
 # p = 0.05
 # G = nx.fast_gnp_random_graph(n, p, seed, directed=False)
 
-
 # graph_name = 'grid2_dual'
 # max_iter = int(1e4)
 # mat_dir = 'input_graphs/SuiteSparse Matrix Collection'
 # G = utils.load_mat(f'{mat_dir}/{graph_name}.mat')
+
+## Tests
 
 # print("Test with STRESS+UNFAIRNESS")
 criteria = ['stress', 'unfairness']
@@ -113,19 +116,6 @@ sample_sizes = dict(
 sample_sizes = {c: sample_sizes[c] for c in criteria}
 
 gd = GD2(G)
-
-# Initial Printing
-stress = C.stress(
-    gd.pos, gd.D, gd.W,
-    sample=None, reduce='mean')
-print("Initial stress: ", stress.item())
-
-unf = C.unfairness(
-    gd.pos, gd.D, gd.W, gd.node_dic,
-    sample=None, reduce='mean')
-print("Initial unfairness: ", unf.item())
-print(f'Shape Pos: {gd.pos.shape}, D: {gd.D.shape}, W: {gd.W.shape}')
-
 result = gd.optimize(
     criteria_weights=criteria_weights,
     sample_sizes=sample_sizes,
@@ -144,7 +134,7 @@ result = gd.optimize(
     criteria_kwargs=dict(
         aspect_ratio=dict(target=[1, 1]),
     ),
-    #optimizer_kwargs = dict(mode='Adam', lr=1),
+    # optimizer_kwargs = dict(mode='Adam', lr=1),
     optimizer_kwargs=dict(mode='SGD', lr=2),
     scheduler_kwargs=dict(verbose=True),
     node_dic=None,
@@ -161,17 +151,6 @@ pos_G = {k: pos[gd.k2i[k]] for k in gd.G.nodes}
 # print('edges')
 # for e in gd.G.edges:
 #    print(f'{e[0]}, {e[1]}')
-
-# Final Printing
-st = C.stress(
-            gd.pos, gd.D, gd.W,
-            sample=None, reduce='mean')
-print('final stress: ', st.item())
-
-unf = C.unfairness(
-    gd.pos, gd.D, gd.W, gd.node_dic,
-    sample=None, reduce='mean')
-print("final unfairness: ", unf.item())
 
 ## vis
 vis.plot(

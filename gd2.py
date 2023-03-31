@@ -242,8 +242,8 @@ class GD2:
                     st = C.stress(
                         pos, D, W,
                         sample=sample, reduce='mean')
-                    if iter_index >= int(1e4)-1:
-                        print("final stress BATCH: ",st.item())
+                    # if iter_index >= int(1e4)-1:
+                    #     print("final stress BATCH: ",st.item())
 
                     l = weight * st
                     loss += l
@@ -254,8 +254,8 @@ class GD2:
                     unf = C.unfairness(
                         pos, D, W, node_dic,
                         sample=sample, reduce='mean')
-                    if iter_index >= int(1e4)-1:
-                        print("final unfairness BATCH: ",unf.item())
+                    # if iter_index >= int(1e4)-1:
+                    #     print("final unfairness BATCH: ",unf.item())
                         #print(f'Shape Pos: {pos.shape}, D: {D.shape}, W: {W.shape}')
                     l = weight * unf
                     loss += l
